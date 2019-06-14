@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class HetuTest < Minitest::Test
-  def h(s)
-    Hetu.new(s)
+  def h(s, **kwargs)
+    Hetu.new(s, **kwargs)
   end
 
   def g(args={})
@@ -18,6 +18,11 @@ class HetuTest < Minitest::Test
 
     assert_equal false, h(nil).valid?
     assert_equal false, h('').valid?
+  end
+
+  def test_fake_but_valid
+    assert h('140699-995H', allow_fake: true).valid?
+    assert_equal false, h('140699-995H', allow_fake: false).valid?
   end
 
   def test_date_of_birth
@@ -81,6 +86,12 @@ class HetuTest < Minitest::Test
     100.times do
       assert g.valid?
     end
+  end
+
+  def test_generate_with_fake_number
+    fake_pin = g(fake: true)
+    assert h(fake_pin, allow_fake: true).valid?
+    assert_equal false, h(fake_pin, allow_fake: false).valid?
   end
 
   def test_generate_with_person_number

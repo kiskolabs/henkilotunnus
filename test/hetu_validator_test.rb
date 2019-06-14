@@ -2,8 +2,8 @@ require 'test_helper'
 require 'henkilotunnus/test/person_model'
 
 class HetuValidatorTest < Minitest::Test
-  def create_model
-    Test::PersonModel.new('X')
+  def create_model(pin='X')
+    Test::PersonModel.new(pin)
   end
 
   def test_validator_valid
@@ -29,5 +29,11 @@ class HetuValidatorTest < Minitest::Test
       assert !model.valid?
       assert_equal model.errors.messages[:pin_message], ['custom message']
     end
+  end
+
+  def test_validator_fake_pin_allowed
+    model = create_model('140699-9214')
+    assert !model.valid?
+    assert model.errors[:fake_pin].none?
   end
 end
